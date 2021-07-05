@@ -7,6 +7,7 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
 public class SpringConfig {
@@ -18,6 +19,7 @@ public class SpringConfig {
     }
 
     @Bean
+    @Profile("qa")
     public AmazonDynamoDB dynamoDBClient() {
         AwsConfig awsConfig = appConfig.getAwsConfig();
         AwsConfig.DynamoDB dynamoDBConfig = awsConfig.getDynamoDB();
@@ -27,5 +29,11 @@ public class SpringConfig {
                 .withCredentials(new AWSStaticCredentialsProvider(credentials))
                 .build();
         return dynamoDB;
+    }
+
+    @Bean
+    @Profile("!qa")
+    public AmazonDynamoDB dynamoDBClientNull() {
+        return new NoOpAmazonDynamoDB();
     }
 }

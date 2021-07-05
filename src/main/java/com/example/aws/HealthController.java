@@ -1,5 +1,6 @@
 package com.example.aws;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -10,6 +11,13 @@ import java.util.HashMap;
 
 @RestController
 public class HealthController {
+    private AppConfig appConfig;
+
+    @Autowired
+    public HealthController(AppConfig appConfig) {
+        this.appConfig = appConfig;
+    }
+
     @GetMapping("/health")
     public ResponseEntity<?> getHealth() throws UnknownHostException {
         HashMap<String, String> data = new HashMap<>();
@@ -17,6 +25,8 @@ public class HealthController {
         data.put("HostAddress: ", localHost.getHostAddress());
         data.put("HostName: ", localHost.getHostName());
         data.put("CanonicalHostName: ", localHost.getCanonicalHostName());
+        data.put("ENV", System.getProperty("ENV"));
+        data.put("aws.dynamoDB.accessKey", appConfig.getAwsConfig().getDynamoDB().getAccessKey());
         return ResponseEntity.ok(data);
     }
 }
