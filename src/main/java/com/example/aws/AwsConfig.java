@@ -11,11 +11,11 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "aws")
 public class AwsConfig {
     private String region;
-    private DynamoDB dynamoDB;
+    private DynamoDBCredential dynamoDB;
 
     @Getter
     @Setter
-    public static class DynamoDB {
+    public static class DynamoDBCredential {
         private String accessKey;
         private String secretKey;
     }
